@@ -2,6 +2,10 @@ package ds.dms.ss_jwt.controllers;
 
 import java.util.List;
 
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import ds.dms.ss_jwt.entities.AppRole;
@@ -9,9 +13,6 @@ import ds.dms.ss_jwt.entities.AppUser;
 import ds.dms.ss_jwt.services.AccountService;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 /**
  * AccountController
@@ -22,6 +23,7 @@ public class AccountController {
   public final AccountService accountService;
 
   @GetMapping("/users")
+  @PreAuthorize("hasRole('ADMIN')")
   public List<AppUser> appUsers() {
     return accountService.listUsers();
   }
@@ -40,6 +42,7 @@ public class AccountController {
   public void addRoleToUser(@RequestBody RoleUserForm roleUserForm) {
     accountService.addRoleToUser(roleUserForm.getUsername(), roleUserForm.getRoleName());
   }
+
 }
 
 @Data
