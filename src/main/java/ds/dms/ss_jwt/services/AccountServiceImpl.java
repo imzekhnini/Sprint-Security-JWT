@@ -34,7 +34,7 @@ public class AccountServiceImpl implements AccountService {
 
   @Override
   public void addRoleToUser(String username, String roleName) {
-    AppUser user = appUserRepository.findbyUsername(username);
+    AppUser user = appUserRepository.findByUsername(username);
     AppRole role = appRoleRepository.findByRoleName(roleName);
 
     user.getAppRoles().add(role);
@@ -47,7 +47,7 @@ public class AccountServiceImpl implements AccountService {
 
   @Override
   public AppUser loadUserByUsername(String username) {
-    return appUserRepository.findbyUsername(username);
+    return appUserRepository.findByUsername(username);
   }
 
 }
