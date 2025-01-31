@@ -3,6 +3,9 @@ package ds.dms.ss_jwt.entities;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -26,6 +29,7 @@ public class AppUser {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   public Long id;
   public String username;
+  @JsonProperty(access = Access.WRITE_ONLY)
   public String password;
   @ManyToMany(fetch = FetchType.EAGER)
   public Collection<AppRole> appRoles = new ArrayList<>();
