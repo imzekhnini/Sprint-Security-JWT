@@ -2,6 +2,7 @@ package ds.dms.ss_jwt.services;
 
 import java.util.List;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 public class AccountServiceImpl implements AccountService {
   public final AppUserRepository appUserRepository;
   public final AppRoleRepository appRoleRepository;
+  public final PasswordEncoder passwordEncoder;
 
   @Override
   public AppRole addNewAppRole(AppRole appRole) {
@@ -29,6 +31,8 @@ public class AccountServiceImpl implements AccountService {
 
   @Override
   public AppUser addNewAppUser(AppUser appUser) {
+    String pw = appUser.getPassword();
+    appUser.setPassword(passwordEncoder.encode(pw));
     return appUserRepository.save(appUser);
   }
 
