@@ -13,6 +13,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 
+import ds.dms.ss_jwt.security.SecurityParams;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -40,12 +41,12 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
       Authentication authResult) throws IOException, ServletException {
 
     User user = (User) authResult.getPrincipal();
-    Algorithm algorithm = Algorithm.HMAC256("mySecret1234");
+    Algorithm algorithm = Algorithm.HMAC256(SecurityParams.SECRET);
     String jwtAccesToken = JWT.create().withSubject(user.getUsername())
-        .withExpiresAt(new Date(System.currentTimeMillis() + 5 * 60 * 1000))
+        .withExpiresAt(new Date(System.currentTimeMillis() + SecurityParams.EXPIRATION))
         .withIssuer(request.getRequestURL().toString())
         .withClaim("roles", user.getAuthorities().stream().map(ga -> ga.getAuthority()).toList())
         .sign(algorithm);
-    response.setHeader("Authorization", jwtAccesToken);
+    response.setHeader(SecurityParams.JWT_HEADER_NAME, jwtAccesToken);
   }
 }

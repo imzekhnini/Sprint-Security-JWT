@@ -15,6 +15,7 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 
+import ds.dms.ss_jwt.security.SecurityParams;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,12 +28,12 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
       throws ServletException, IOException {
-    String authToken = request.getHeader("Authorization");
-    if (authToken != null && authToken.startsWith("Bearer ")) {
+    String authToken = request.getHeader(SecurityParams.JWT_HEADER_NAME);
+    if (authToken != null && authToken.startsWith(SecurityParams.HEADER_PREFIX)) {
       try {
 
-        String jwt = authToken.substring(7);
-        Algorithm algorithm = Algorithm.HMAC256("mySecret1234");
+        String jwt = authToken.substring(SecurityParams.HEADER_PREFIX.length());
+        Algorithm algorithm = Algorithm.HMAC256(SecurityParams.SECRET);
         JWTVerifier jwtVerifier = JWT.require(algorithm).build();
         DecodedJWT decodedJWT = jwtVerifier.verify(jwt);
         String username = decodedJWT.getSubject();
